@@ -8,13 +8,31 @@ const bookSchema = new Schema({
   author: {
     type: String,
   },
+  language: {
+    type: String,
+  },
+  ageCategory: {
+    type: String,
+  },
   genre: {
+    type: String,
+  },
+  ARcontent: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  tag1: {
+    type: String,
+  },
+  tag2: {
     type: String,
   },
   Link: {
     type: String,
   },
-  description: {
+  image: {
     type: String,
   },
 });
