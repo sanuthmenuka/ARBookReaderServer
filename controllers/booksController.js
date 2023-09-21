@@ -5,12 +5,12 @@ const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const getBooks = async (req, res) => {
   try {
     const books = await Book.find();
-    res.status(200).json({ books });
+    console.log(books); // Fetch all books from the database
+    res.status(200).json(books); // Return the list of books as JSON
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
-const getBookById = async (req, res) => {};
 
 //upload to firebase and then to the database
 const addBook = async (req, res) => {
@@ -26,7 +26,6 @@ const addBook = async (req, res) => {
       tag1,
       tag2,
     } = req.body;
-    console.log(req.body);
 
     const coverImageFile = req.files.find(
       (file) => file.fieldname === "coverImage"
@@ -96,5 +95,7 @@ const addBook = async (req, res) => {
     res.status(500).json({ error: "Failed to add book" });
   }
 };
+
+const getBookById = async (req, res) => {};
 
 module.exports = { getBooks, getBookById, addBook };
