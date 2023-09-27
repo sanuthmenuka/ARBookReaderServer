@@ -5,6 +5,7 @@ const express = require("express");
 
 const userRoutes = require("./routes/user");
 const bookRoutes = require("./routes/Book");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/", function (req, res) {
 
 //middlware
 app.use(express.json());
+app.use(cookieParser());
 
 //routes
 app.use("/api/user", userRoutes);
