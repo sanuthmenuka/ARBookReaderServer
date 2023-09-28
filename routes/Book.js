@@ -16,5 +16,6 @@ router.get("/getBooks",validateToken, getBooks);
 router.get("/getBooks/:id", getBookById);
 router.get("/getBookByTitle/:title", getBookByTitle);
 router.post("/addBook", upload.any(), addBook);
+//router.post("/addBook",  addBook);
 
 module.exports = router;

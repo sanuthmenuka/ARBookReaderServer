@@ -80,6 +80,7 @@ const getBookByTitle = async (req, res) => {
 
 //upload to firebase and then to the database
 const addBook = async (req, res) => {
+  console.log(req.body);
   try {
     const {
       title,

@@ -20,7 +20,26 @@ const userSchema=new Schema({
     password:{
         type:String,
         required:true,
-    }
+    },
+    profilePicture: {
+        type: String,
+      },
+    addedtoLibrary: {
+        type: Array,
+        default: [],
+      },
+    publisher: {
+        type: Boolean,
+        default: false,
+      },
+    publishedBooks: {
+        type: Array,
+        default: [],
+      },
+    paid: {
+        type: Boolean,
+        default: false,
+      },
 })
 
 //static signup method
@@ -63,6 +82,7 @@ userSchema.statics.signup=async function(firstName,lastName,email, password,conf
 
 //static login method
 userSchema.statics.login=async function(email,password){
+
     if(!email||!password){
         throw Error('All fields must be filled')
     }
