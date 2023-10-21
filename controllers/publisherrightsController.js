@@ -54,7 +54,6 @@ const getpublisherrightsrequest = async (req, res) => {
             console.log(request); // First name of the user associated with this request
           }); */
 
-        
         res.status(200).json({
           length: publisherRightRequests.length,
           data: { publishertRequests:publisherRightRequests },

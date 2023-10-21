@@ -253,5 +253,51 @@ const addBook = async (req, res) => {
 };
 
 
+/*get all the books which have not yet been reviewed by the admin*/
+const getUnreviewedBooks= async (req, res) => { 
+  
+  try {
+    const foundBooks = await Book.find({  adminReviewed: false });
+    
+    if (foundBooks) {
+      console.log(foundBooks)
+      res.status(200).json({
+        length: foundBooks.length,
+        data: { foundBooks:foundBooks },
+      });
+      
+    }
+  }
+  catch(error){
+    console.error("Error ", error);
+    res.status(500).json({ error: "Failed to get unreviewed books"})
 
-module.exports = { getBooks, getBookById,getBookByTitle, addBook , removePublishedBook};
+  }
+};
+
+const markAsReviewed = async(req,res) =>{
+  const  bookID = req.params.id;
+
+  try{
+    const foundBook = await Book.findOne({ _id : bookID });
+   
+    foundBook.adminReviewed = true;
+    
+    // Save the updated user document
+    await foundBook.save();
+    res.status(200).json({ error: "Successfully marked the book as reviewed"})
+   
+  }
+  catch(error){
+    console.error("Error ", error);
+    res.status(500).json({ error: "Failed to mark the book as reviewed"})
+  }
+
+
+};
+
+
+
+
+
+module.exports = { getBooks, getBookById,getBookByTitle, addBook , removePublishedBook, getUnreviewedBooks ,markAsReviewed};

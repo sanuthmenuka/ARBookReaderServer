@@ -148,7 +148,7 @@ const getUserDetails = async (req,res) =>{
     console.log(foundUser);
     if (foundUser) {
       
-      const {email ,firstName,lastName,profilePicture,addedtoLibrary,publisher,publishedBooks} = foundUser;
+      const {email ,firstName,lastName,profilePicture,addedtoLibrary,publisher,publishedBooks,userRole,paid} = foundUser;
       
       
 
@@ -166,6 +166,7 @@ const getUserDetails = async (req,res) =>{
         users_books,
         publisher,
         users_published_books,
+        paid
       }; 
 
       res.status(200).json({userDetails}); 
@@ -259,14 +260,21 @@ const addToLibrary = async (req,res) =>{
     //console.log(foundUser);
     
     if (foundUser) {
-       //add new book to user's libaray
+      //check if the user has activated the subscription plan
+      if(foundUser.paid){
+        //add new book to user's libaray
        foundUser.addedtoLibrary.push(book_id);
 
        // Save the updated user document
        await foundUser.save();
  
        console.log("User updated:", foundUser);
-       res.status(200).json({ message: 'Added to library' });
+       res.status(200).json({ message: 'Success' });
+      }
+      else{
+        res.status(201).json({ message: 'Activate' });
+      }
+       
     } 
     else {
       res.status(404).json({ message: 'User not found' });
@@ -276,11 +284,7 @@ const addToLibrary = async (req,res) =>{
     console.error('Error finding User:', error);
     res.status(500).json({ message: error.message });
   }
-
-  
-  
 }
-
 
 //remove book from user's personal library
 //first  check if that book is avilable in user's library and if found delete
@@ -313,4 +317,30 @@ const removeLibraryBook = async (req, res) => {
  
 };
 
-module.exports = { loginUser, signupUser , getUserDetails, editProfile ,addToLibrary,removeLibraryBook ,createSubscription,success};
+//activate the subscription plan for the user
+const activateSubscription = async (req, res) => {
+  /* get the user id using the JWT token*/
+  const userId =req.userId;
+  const subscriptionId = req.params.subscriptionid
+  console.log(userId,subscriptionId);
+
+  try {
+    const foundUser = await User.findOne({ _id: userId });
+    
+    if(foundUser){
+      //set paid to true (by default it is set to false)
+      foundUser.paid = true;
+
+      foundUser.save();
+      res.status(200).json({ message: "subsciption plan activated" }); 
+    }
+    
+    
+  } catch (error) {
+    console.error('Error activating the subscription plan', error);
+    res.status(500).json({ message: error.message });
+  }
+ 
+};
+
+module.exports = { loginUser, signupUser , getUserDetails, editProfile ,addToLibrary,removeLibraryBook ,createSubscription,success,activateSubscription};

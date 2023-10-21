@@ -37,6 +37,10 @@ const bookSchema = new Schema({
   },
   ratings: {
     type: Number,
+    default : false,
+  },
+  adminReviewed: {
+    type: Boolean,
   },
 });
 
