@@ -35,6 +35,9 @@ const bookSchema = new Schema({
   image: {
     type: String,
   },
+  ratings: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model("Book", bookSchema);

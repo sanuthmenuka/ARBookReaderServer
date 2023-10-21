@@ -5,7 +5,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const {createTokens,validateToken} = require("../controllers/JWT");
 
 //controller functions
-const {loginUser,signupUser,getUserDetails,editProfile,addToLibrary}=require('../controllers/userController')
+const {loginUser,signupUser,getUserDetails,editProfile,addToLibrary,removeLibraryBook,createSubscription,success}=require('../controllers/userController')
 
 router.post('/login',loginUser)
 
@@ -15,8 +15,13 @@ router.get('/getUserDetails',validateToken,getUserDetails)
 
 router.post('/editProfile',validateToken,upload.any(),editProfile)
 
-router.get('/addToLibrary',validateToken,addToLibrary)
+router.get('/addToLibrary',validateToken,addToLibrary);
 
+router.delete('/removeLibraryBook/:id',validateToken,removeLibraryBook);
+
+router.post('/create-subscription',createSubscription);
+
+router.get('/success',success);
 
 module.exports=router
 

@@ -1,6 +1,7 @@
 const Book = require("../models/Bookmodel");
 const storage = require("../controllers/firebase");
-const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
+const { ref, uploadBytes, getDownloadURL ,deleteObject } = require("firebase/storage");
+const User = require("../models/userModel");
 
 
 //return All , recent , most popular or AR books according to the request parameters
@@ -61,7 +62,7 @@ const getBookById = async (req, res) => {};
 
 /*get a book with a particular title, from the DB*/
 const getBookByTitle = async (req, res) => {
-  /* get the title is passed as a URL parameter */
+  /* get the title which is passed as a URL parameter */
   const { title } = req.params; 
   console.log(title);
   try {
@@ -78,9 +79,66 @@ const getBookByTitle = async (req, res) => {
   }
 };
 
+/*delete a book with a particular book id, from Database, author's published books array and from firebase */
+//need to implement delete from firebase
+const removePublishedBook = async (req, res) => {
+  /* get the id whichpassed as a URL parameter */
+  const  bookID = req.params.id;
+  const userId = req.userId;
+  console.log("remove",bookID);
+
+  try {
+    const foundBook = await Book.findOne({ _id: bookID });
+    if (foundBook) {
+    
+      const { title, author } = foundBook;
+      
+      // Delete the corresponding files from Firebase Storage
+      const bookRef = ref(storage, `books/${title}-${author}.pdf`);
+      const imageRef = ref(storage, `images/${title}-${author}.jpg`);
+
+      const deletePromises = [];
+      deletePromises.push(deleteObject(bookRef));
+      deletePromises.push(deleteObject(imageRef));
+
+      await Promise.all(deletePromises); // Wait for both files to be deleted
+      
+      //delete book from database
+      const deletedBook = await Book.deleteOne({ _id: bookID });
+    
+    if (deletedBook) {
+      
+      //Delete the book id from user's published books array
+      const foundUser = await User.findOne({ _id: userId });
+    
+      if(foundUser){
+        // Use the pull method to remove the bookID directly from the personal library array
+        foundUser.publishedBooks.pull(bookID);
+        await foundUser.save();
+        if (!foundUser) {
+          res.status(404).json({ message: 'Could not find the owner of the deleted book' });
+        }
+      }
+    } else {
+      res.status(404).json({ message: 'Could not delete the book' });
+    }
+
+    res.status(200).json({ deletedBook }); 
+    }
+  } catch (error) {
+    console.error('Error deleting the book:', error);
+    res.status(500).json({ message: error.message });
+  }
+ 
+};
+
+
 //upload to firebase and then to the database
 const addBook = async (req, res) => {
   console.log(req.body);
+  //get id of the user
+  const userId = req.userId;
+  
   try {
     const {
       title,
@@ -94,7 +152,7 @@ const addBook = async (req, res) => {
       tag2,
     } = req.body;
     
-    console.log(req.body);
+    const ratings = 0.0;
 
     const coverImageFile = req.files.find(
       (file) => file.fieldname === "coverImage"
@@ -124,7 +182,7 @@ const addBook = async (req, res) => {
 
     const coverImageUrl = await getDownloadURL(ImageRef);
 
-    //Upload boook to
+    //Upload boook 
     const bookRef = ref(storage, `books/${title}-${author}.pdf`);
     const bookMetadata = {
       contentType: "application/pdf",
@@ -153,16 +211,47 @@ const addBook = async (req, res) => {
       tag2: tag2,
       Link: bookUrl, // Set the book link to the Firebase Storage URL
       image: coverImageUrl, // Set the cover image URL from Firebase Storage
+      ratings:ratings,
     });
 
     await newBook.save();
 
+     //Add book id to users published books array
+     const book_id = newBook._id.valueOf();
+     console.log(newBook._id);
+ 
+     
+       const foundUser = await User.findOne({ _id: userId });
+       //console.log(foundUser);
+       
+       if (foundUser) {
+          //add new book to user's libaray
+          foundUser.publishedBooks.push(book_id);
+   
+          // Save the updated user document
+          await foundUser.save();
+    
+          console.log("User updated:", foundUser);
+          
+       } 
+       else{
+        console.log("User not found")
+       }
+       
+       
+    
+ 
+   
     res.status(201).json({ message: "Book added successfully" });
     console.log("Book added to db successfully");
+    
+   
   } catch (error) {
     console.error("Error adding book:", error);
     res.status(500).json({ error: "Failed to add book" });
   }
 };
 
-module.exports = { getBooks, getBookById,getBookByTitle, addBook };
+
+
+module.exports = { getBooks, getBookById,getBookByTitle, addBook , removePublishedBook};
