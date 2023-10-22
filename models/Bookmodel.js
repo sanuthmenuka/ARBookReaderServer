@@ -35,6 +35,13 @@ const bookSchema = new Schema({
   image: {
     type: String,
   },
+  ratings: {
+    type: Number,
+    default : false,
+  },
+  adminReviewed: {
+    type: Boolean,
+  },
 });
 
 module.exports = mongoose.model("Book", bookSchema);

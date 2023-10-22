@@ -10,12 +10,14 @@ const {
   getBookById,
   addBook,
   getBookByTitle,
+  removePublishedBook,
 } = require("../controllers/booksController");
 
 router.get("/getBooks",validateToken, getBooks);
 router.get("/getBooks/:id", getBookById);
 router.get("/getBookByTitle/:title", getBookByTitle);
-router.post("/addBook", upload.any(), addBook);
+router.post("/addBook",validateToken, upload.any(), addBook);
+router.delete('/removePublishedBook/:id',validateToken,removePublishedBook);
 //router.post("/addBook",  addBook);
 
 module.exports = router;
