@@ -2,15 +2,22 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require("cors");
 
 const userRoutes = require("./routes/user");
 const bookRoutes = require("./routes/Book");
-const publisherrightRoutes  = require("./routes/Publisherright")
+const publisherrightRoutes = require("./routes/Publisherright");
 const cookieParser = require("cookie-parser");
-
+const corsOptions = {
+  origin: "https://bookmarketplace.onrender.com", // frontend URI (ReactJS)
+};
+app.use(express.json());
+app.use(cors(corsOptions));
 const app = express();
 
-const stripe = require("stripe")("sk_test_51O12iqAQvidGp1QOJDPSU2UlOCAjNtA8CPjbH4X6RssKvOKxLCuuflXvlHfLEWXBg4U4UIIL4Wypv74pFmrFDGXQ00qNuRF96x");
+const stripe = require("stripe")(
+  "sk_test_51O12iqAQvidGp1QOJDPSU2UlOCAjNtA8CPjbH4X6RssKvOKxLCuuflXvlHfLEWXBg4U4UIIL4Wypv74pFmrFDGXQ00qNuRF96x"
+);
 
 app.get("/", function (req, res) {
   res.send("Hello world!");
@@ -39,7 +46,6 @@ app.post("/create-subscription", async (req, res) => {
   res.json({ subscription });
 });
 
-
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
@@ -50,5 +56,3 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
- 
