@@ -11,8 +11,7 @@ const cookieParser = require("cookie-parser");
 const corsOptions = {
   origin: "https://bookmarketplace.onrender.com", // frontend URI (ReactJS)
 };
-app.use(express.json());
-app.use(cors(corsOptions));
+
 const app = express();
 
 const stripe = require("stripe")(
@@ -26,6 +25,8 @@ app.get("/", function (req, res) {
 //middlware
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
+app.use(cors(corsOptions));
 
 //routes
 app.use("/api/user", userRoutes);
