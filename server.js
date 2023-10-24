@@ -9,8 +9,9 @@ const bookRoutes = require("./routes/Book");
 const publisherrightRoutes = require("./routes/Publisherright");
 const cookieParser = require("cookie-parser");
 const corsOptions = {
-  origin: "https://bookmarketplace.onrender.com", // frontend URI (ReactJS)
+  origin: "*", // frontend URI (ReactJS)
 };
+app.use(cors(corsOptions));
 
 const app = express();
 
@@ -26,7 +27,6 @@ app.get("/", function (req, res) {
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors(corsOptions));
 
 //routes
 app.use("/api/user", userRoutes);
