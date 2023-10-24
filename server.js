@@ -9,7 +9,8 @@ const bookRoutes = require("./routes/Book");
 const publisherrightRoutes = require("./routes/Publisherright");
 const cookieParser = require("cookie-parser");
 const corsOptions = {
-  origin: "*", // frontend URI (ReactJS)
+  origin: "*",
+  credentials: true, // frontend URI (ReactJS)
 };
 
 const app = express();
