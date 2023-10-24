@@ -17,20 +17,19 @@ app.use(cors(corsOptions));
 const stripe = require("stripe")(
   "sk_test_51O12iqAQvidGp1QOJDPSU2UlOCAjNtA8CPjbH4X6RssKvOKxLCuuflXvlHfLEWXBg4U4UIIL4Wypv74pFmrFDGXQ00qNuRF96x"
 );
-
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.json());
+app.use("/api/user", userRoutes);
+app.use("/api/book", bookRoutes);
+app.use("/api/publisherright", publisherrightRoutes);
 app.get("/", function (req, res) {
   res.send("Hello world!");
 });
 
 //middlware
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.json());
 
 //routes
-app.use("/api/user", userRoutes);
-app.use("/api/book", bookRoutes);
-app.use("/api/publisherright", publisherrightRoutes);
 
 app.post("/create-subscription", async (req, res) => {
   const customer = await stripe.customers.create({

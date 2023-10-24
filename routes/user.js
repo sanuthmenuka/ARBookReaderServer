@@ -20,7 +20,7 @@ router.post("/login", loginUser);
 
 router.post("/signup", signupUser);
 
-router.get("/getUserDetails", getUserDetails);
+router.get("/getUserDetails", validateToken, getUserDetails);
 
 router.post("/editProfile", validateToken, upload.any(), editProfile);
 
