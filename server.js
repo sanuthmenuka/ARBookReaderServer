@@ -11,10 +11,9 @@ const cookieParser = require("cookie-parser");
 const corsOptions = {
   origin: "*", // frontend URI (ReactJS)
 };
-app.use(cors(corsOptions));
 
 const app = express();
-
+app.use(cors(corsOptions));
 const stripe = require("stripe")(
   "sk_test_51O12iqAQvidGp1QOJDPSU2UlOCAjNtA8CPjbH4X6RssKvOKxLCuuflXvlHfLEWXBg4U4UIIL4Wypv74pFmrFDGXQ00qNuRF96x"
 );
