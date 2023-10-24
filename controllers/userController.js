@@ -120,6 +120,8 @@ const loginUser = async (req, res) => {
       maxAge: 3 * 60 * 60 * 24 * 1000,
       secure: true, // Set to true for production
       httpOnly: true,
+      SameSite: None,
+      secure: true,
     });
 
     res.status(200).json({ email, token, userRole });
