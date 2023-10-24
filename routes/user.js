@@ -20,13 +20,13 @@ router.post("/login", loginUser);
 
 router.post("/signup", signupUser);
 
-router.get("/getUserDetails", validateToken, getUserDetails);
+router.get("/getUserDetails", getUserDetails);
 
-router.post("/editProfile", validateToken, upload.any(), editProfile);
+router.post("/editProfile", upload.any(), editProfile);
 
-router.get("/addToLibrary", validateToken, addToLibrary);
+router.get("/addToLibrary", addToLibrary);
 
-router.delete("/removeLibraryBook/:id", validateToken, removeLibraryBook);
+router.delete("/removeLibraryBook/:id", removeLibraryBook);
 
 router.post("/create-subscription", createSubscription);
 

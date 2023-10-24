@@ -155,7 +155,7 @@ const getUserDetails = async (req, res) => {
   const userId = req.userId;
   try {
     const foundUser = await User.findOne({ _id: userId });
-    console.log("user details");
+    console.log("user details requested");
     if (foundUser) {
       const {
         email,
