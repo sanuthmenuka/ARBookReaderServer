@@ -124,7 +124,15 @@ const loginUser = async (req, res) => {
       secure: true,
     });
 
-    res.status(200).json({ email, token, userRole });
+    res.status(200).json({
+      email,
+      token,
+      userRole,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profilePicture: user.profilePicture,
+      addToLibrary: user.addedtoLibrary,
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
